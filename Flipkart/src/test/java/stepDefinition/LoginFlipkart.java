@@ -15,6 +15,11 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+import com.aventstack.extentreports.ExtentReports;
+import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.Status;
+import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
+
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
@@ -31,6 +36,8 @@ public class LoginFlipkart {
 	
 	WebDriver driver=null;
 	 Properties prop;
+	 ExtentReports extent;
+	 ExtentTest logger;
 	
 	@Before
 	public void setup() throws IOException
@@ -41,6 +48,11 @@ public class LoginFlipkart {
 		  prop =new Properties();
 		  prop.load(reader);
 		  
+		  ExtentHtmlReporter reporter = new ExtentHtmlReporter("./reports/flipkart.html");
+		  extent= new ExtentReports();
+		  extent.attachReporter(reporter);
+		  
+		  
 		 
 		
 	}
@@ -49,6 +61,7 @@ public class LoginFlipkart {
 	public void TearDown()
 	{
 		driver.close();
+		extent.flush();
 		
 	}
 	
@@ -56,8 +69,12 @@ public class LoginFlipkart {
 	@Given("^I am on Flipkart home Page \"([^\"]*)\"$")
 	public void i_am_on_Flipkart_home_Page(String arg1) throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
+		 logger=extent.createTest("Login Test", "I am on flipkart page");
+		logger.log(Status.INFO, "I am on flipkart page from logger");
 		
 		driver.get(arg1);
+		
+		logger.log(Status.PASS, "Passed from flipkart home page");
 	    
 	}
 
@@ -79,6 +96,8 @@ public class LoginFlipkart {
 			System.out.println(displayed+ "displayed");
 			driver.findElement(By.xpath(prop.getProperty("login"))).click();
 		}
+		
+		logger.log(Status.PASS, "Submit credentials also passed");
 	    
 	}
 
@@ -90,6 +109,7 @@ public class LoginFlipkart {
 		
 		String Expected="Online Shopping Site for Mobiles, Electronics, Furniture, Grocery, Lifestyle, Books & More. Best Offers!";
 		Assert.assertEquals(Expected, actual);
+		logger.log(Status.PASS, "Login also passed");
 	    
 	}
 	
@@ -123,7 +143,7 @@ public class LoginFlipkart {
 		}
 		
 		
-	   
+		logger.log(Status.PASS, "Compare Logo also Passed");
 	
 	}
 

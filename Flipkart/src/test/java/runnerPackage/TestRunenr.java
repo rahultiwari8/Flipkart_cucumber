@@ -8,7 +8,7 @@ import cucumber.api.junit.Cucumber;
 @RunWith(Cucumber.class)
 
 @CucumberOptions(
-		features= "/Users/rahultiwari/eclipse-workspace/Flipkart/src/test/resources/",
+		features= "src/test/resources/",
 		glue= {"stepDefinition"},
 		dryRun=false,
 		monochrome=true,

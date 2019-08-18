@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 import javax.imageio.ImageIO;
 
@@ -24,6 +25,7 @@ import ru.yandex.qatools.ashot.AShot;
 import ru.yandex.qatools.ashot.Screenshot;
 import ru.yandex.qatools.ashot.comparison.ImageDiff;
 import ru.yandex.qatools.ashot.comparison.ImageDiffer;
+import ru.yandex.qatools.ashot.coordinates.WebDriverCoordsProvider;
 
 public class LoginFlipkart {
 	
@@ -34,7 +36,7 @@ public class LoginFlipkart {
 	public void setup() throws IOException
 	{
 		System.setProperty("webdriver.chrome.driver", "/Users/rahultiwari/Documents/Driver_for_selenium/chromedriver");
-		FileReader reader =new FileReader("/Users/rahultiwari/eclipse-workspace/Flipkart/src/test/java/util/locators.properties");
+		FileReader reader =new FileReader("src/test/java/util/locators.properties");
 		 driver = new ChromeDriver();
 		  prop =new Properties();
 		  prop.load(reader);
@@ -95,12 +97,18 @@ public class LoginFlipkart {
 	public void compare_the_logo() throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
 		
-		WebElement element=driver.findElement(By.xpath("//div[@class='_1T-JyI']"));
-		Screenshot s = new AShot().takeScreenshot(driver, element);
-		ImageIO.write(s.getImage(), "PNG", new File("/Users/rahultiwari/eclipse-workspace/Flipkart/drivers/"));
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		
+		WebElement element=driver.findElement(By.xpath("//img[@class='_1e_EAo']"));
+		
+		
+		
+		
+		Screenshot s = new AShot().coordsProvider(new WebDriverCoordsProvider()).takeScreenshot(driver, element);
+		ImageIO.write(s.getImage(), "PNG", new File("drivers/actual.png"));
 		BufferedImage actualImage=s.getImage();
 		
-		BufferedImage expected=ImageIO.read(new File("/Users/rahultiwari/Desktop/flipkart_expected.png"));
+		BufferedImage expected=ImageIO.read(new File("drivers/flipkart_expected.png"));
 		
 		ImageDiffer imdiff = new ImageDiffer();
 		ImageDiff imagediff=imdiff.makeDiff(expected, actualImage);
@@ -111,7 +119,7 @@ public class LoginFlipkart {
 			Assert.assertFalse("Image has differecne", diffboolean);
 		}else
 		{
-			Assert.assertTrue("Image has no differecne", diffboolean);
+			Assert.assertTrue("Image has no differecne", true);
 		}
 		
 		
